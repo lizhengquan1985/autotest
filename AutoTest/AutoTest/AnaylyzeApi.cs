@@ -10,30 +10,31 @@ using System.Threading.Tasks;
 
 namespace AutoTest
 {
-    public class ResponseMerged
-    {
-        public string status { get; set; }
-        public TickData tick { get; set; }
-    }
-
-    public class TickData
-    {
-        public decimal close { get; set; }
-    }
-
     public class AnaylyzeApi
     {
-        private static string domain = "";
+        private static string domain = "api.huobi.pro/market";
         private static string baseUrl = $"https://{domain}";
 
         public static ResponseMerged Merged(string symbol)
         {
-            var url = $"{baseUrl}/";
-            url += $"?";
+            var url = $"{baseUrl}/detail/merged";
+            url += $"?symbol={symbol}";
 
             int httpCode = 0;
             var result = RequestDataSync(url, "GET", null, null, out httpCode);
+            //Console.WriteLine(result);
+            //Console.WriteLine(httpCode);
             return JsonConvert.DeserializeObject<ResponseMerged>(result);
+        }
+
+        public ResponseKline kline(string symbol, string period, int size = 300)
+        {
+            var url = $"{baseUrl}/history/kline";
+            url += $"?symbol={symbol}&period={period}&size={size}";
+
+            int httpCode = 0;
+            var result = RequestDataSync(url, "GET", null, null, out httpCode);
+            return JsonConvert.DeserializeObject<ResponseKline>(result);
         }
 
         private static string RequestDataSync(string url, string method, Dictionary<string, object> param, WebHeaderCollection headers, out int httpCode)

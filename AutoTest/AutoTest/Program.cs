@@ -12,7 +12,57 @@ namespace AutoTest
     {
         static void Main(string[] args)
         {
-            AnaylyzeApi
+            while (true)
+            {
+                Console.WriteLine("请输入");
+                decimal lastlow, nowOpen;
+                var k = Console.ReadLine();
+
+                var res = CoinAnalyze.Analyze(k, out lastlow, out nowOpen);
+                Console.WriteLine(k + $" -->   {lastlow}, {nowOpen}");
+                foreach (var item in res)
+                {
+                    Console.WriteLine(Utils.GetDateById(item.id).ToString("yyyy-MM-dd HH:mm:ss") + " -->   " + JsonConvert.SerializeObject(item));
+                }
+
+                res = CoinAnalyze.Analyze(k, out lastlow, out nowOpen, 1.01);
+                Console.WriteLine(k + $" -->   {lastlow}, {nowOpen}");
+                foreach (var item in res)
+                {
+                    Console.WriteLine(Utils.GetDateById(item.id).ToString("yyyy-MM-dd HH:mm:ss") + " -->   " + JsonConvert.SerializeObject(item));
+                }
+
+                res = CoinAnalyze.Analyze(k, out lastlow, out nowOpen, 1.02);
+                Console.WriteLine(k + $" -->   {lastlow}, {nowOpen}");
+                foreach (var item in res)
+                {
+                    Console.WriteLine(Utils.GetDateById(item.id).ToString("yyyy-MM-dd HH:mm:ss") + " -->   " + JsonConvert.SerializeObject(item));
+                }
+
+                res = CoinAnalyze.Analyze(k, out lastlow, out nowOpen, 1.025);
+                Console.WriteLine(k + $" -->   {lastlow}, {nowOpen}");
+                foreach (var item in res)
+                {
+                    Console.WriteLine(Utils.GetDateById(item.id).ToString("yyyy-MM-dd HH:mm:ss") + " -->   " + JsonConvert.SerializeObject(item));
+                }
+
+                res = CoinAnalyze.Analyze(k, out lastlow, out nowOpen, 1.035);
+                Console.WriteLine(k + $" -->   {lastlow}, {nowOpen}");
+                foreach (var item in res)
+                {
+                    Console.WriteLine(Utils.GetDateById(item.id).ToString("yyyy-MM-dd HH:mm:ss") + " -->   " + JsonConvert.SerializeObject(item));
+                }
+
+                //res = CoinAnalyze.AnalyzeBs(k, out lastlow, out nowOpen);
+                //Console.WriteLine(k + $" -->   {lastlow}, {nowOpen}");
+                //foreach (var item in res)
+                //{
+                //    Console.WriteLine(Utils.GetDateById(item.id).ToString("yyyy-MM-dd HH:mm:ss")+" -->   "+JsonConvert.SerializeObject(item));
+                //}
+            }
+
+
+            Console.ReadLine();
         }
     }
 }
