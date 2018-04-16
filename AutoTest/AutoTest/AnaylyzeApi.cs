@@ -12,9 +12,45 @@ namespace AutoTest
 {
     public class AnaylyzeApi
     {
-        private static string domain = "api.huobi.pro/market";
+        private static string domain = "api.huobipro.com/market";
         private static string baseUrl = $"https://{domain}";
 
+        /*
+         "data": [
+{
+    "id": K线id,
+    "amount": 成交量,
+    "count": 成交笔数,
+    "open": 开盘价,
+    "close": 收盘价,当K线为最晚的一根时，是最新成交价
+    "low": 最低价,
+    "high": 最高价,
+    "vol": 成交额, 即 sum(每一笔成交价 * 该笔的成交量)
+  }
+]*/
+        public static ResponseKline kline(string symbol, string period, int size = 300)
+        {
+            var url = $"{baseUrl}/history/kline";
+            url += $"?symbol={symbol}&period={period}&size={size}";
+
+            int httpCode = 0;
+            var result = RequestDataSync(url, "GET", null, null, out httpCode);
+            return JsonConvert.DeserializeObject<ResponseKline>(result);
+        }
+
+        /*
+         "tick": {
+    "id": K线id,
+    "amount": 成交量,
+    "count": 成交笔数,
+    "open": 开盘价,
+    "close": 收盘价,当K线为最晚的一根时，是最新成交价
+    "low": 最低价,
+    "high": 最高价,
+    "vol": 成交额, 即 sum(每一笔成交价 * 该笔的成交量)
+    "bid": [买1价,买1量],
+    "ask": [卖1价,卖1量]
+  }*/
         public static ResponseMerged Merged(string symbol)
         {
             var url = $"{baseUrl}/detail/merged";
@@ -27,10 +63,77 @@ namespace AutoTest
             return JsonConvert.DeserializeObject<ResponseMerged>(result);
         }
 
-        public ResponseKline kline(string symbol, string period, int size = 300)
+        /*
+         "tick": {
+    "id": 消息id,
+    "ts": 消息生成时间，单位：毫秒,
+    "bids": 买盘,[price(成交价), amount(成交量)], 按price降序,
+    "asks": 卖盘,[price(成交价), amount(成交量)], 按price升序
+  }
+             */
+        public static ResponseMerged Depth(string symbol, string type)
         {
-            var url = $"{baseUrl}/history/kline";
-            url += $"?symbol={symbol}&period={period}&size={size}";
+            var url = $"{baseUrl}/depth";
+            url += $"?symbol={symbol}&type={type}";
+
+            int httpCode = 0;
+            var result = RequestDataSync(url, "GET", null, null, out httpCode);
+            //Console.WriteLine(result);
+            //Console.WriteLine(httpCode);
+            return JsonConvert.DeserializeObject<ResponseMerged>(result);
+        }
+
+        /*
+         * "tick": {
+    "id": 消息id,
+    "ts": 最新成交时间,
+    "data": [
+      {
+        "id": 成交id,
+        "price": 成交价钱,
+        "amount": 成交量,
+        "direction": 主动成交方向,
+        "ts": 成交时间
+      }
+    ]
+  }
+         */
+        public static ResponseKline trade(string symbol)
+        {
+            var url = $"{baseUrl}/trade";
+            url += $"?symbol={symbol}";
+
+            int httpCode = 0;
+            var result = RequestDataSync(url, "GET", null, null, out httpCode);
+            return JsonConvert.DeserializeObject<ResponseKline>(result);
+        }
+
+        public static ResponseKline historytrade(string symbol, int size = 2000)
+        {
+            var url = $"{baseUrl}/history/trade";
+            url += $"?symbol={symbol}&size={size}";
+
+            int httpCode = 0;
+            var result = RequestDataSync(url, "GET", null, null, out httpCode);
+            return JsonConvert.DeserializeObject<ResponseKline>(result);
+        }
+
+        /*
+         "tick": {
+    "id": 消息id,
+    "ts": 24小时统计时间,
+    "amount": 24小时成交量,
+    "open": 前推24小时成交价,
+    "close": 当前成交价,
+    "high": 近24小时最高价,
+    "low": 近24小时最低价,
+    "count": 近24小时累积成交数,
+    "vol": 近24小时累积成交额, 即 sum(每一笔成交价 * 该笔的成交量)
+  }*/
+        public static ResponseKline detail(string symbol)
+        {
+            var url = $"{baseUrl}/trade";
+            url += $"?symbol={symbol}";
 
             int httpCode = 0;
             var result = RequestDataSync(url, "GET", null, null, out httpCode);
