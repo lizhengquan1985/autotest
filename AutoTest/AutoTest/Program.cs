@@ -45,32 +45,47 @@ namespace AutoTest
                 // 1. kline
                 var dt = DateTime.Now.ToString("yyyy年MM月dd日HH时mm分ss");
                 ResponseKline kline = AnaylyzeApi.kline(k + toCoin, "1min", 1440);
+                var data = kline.data;
+                var end = data[data.Count - 1].close;
+                for (var i=data.Count - 2; i>=0;i--)
+                {
+                    var item = data[i];
+                    var percent = (end - item.close) / item.close;
+                    percent = Math.Abs(percent);
+
+                    var rate = percent / (data.Count - i);
+                    if(rate > (decimal)0.001)
+                    {
+                        logger.Error("平均一分钟降低了0.1%，好恐怖啊");
+                    }
+                }
                 logger.Error(JsonConvert.SerializeObject(kline));
-                FileUtils.write(JsonConvert.SerializeObject(kline), dt + "-kline.txt");
+                FileUtils.write(JsonConvert.SerializeObject(kline), "a"+dt + "-kline.txt");
+
                 // 2. merged
                 var merged = AnaylyzeApi.Merged(k + "usdt");
                 logger.Error(JsonConvert.SerializeObject(merged));
-                FileUtils.write(JsonConvert.SerializeObject(merged), dt + "-merged.txt");
+                FileUtils.write(JsonConvert.SerializeObject(merged), "b" + dt + "-merged.txt");
 
                 // 3. depth
                 var depth = AnaylyzeApi.Depth(k + "usdt", "step0");
                 logger.Error(JsonConvert.SerializeObject(depth));
-                FileUtils.write(JsonConvert.SerializeObject(depth), dt + "-depth.txt");
+                FileUtils.write(JsonConvert.SerializeObject(depth), "c" + dt + "-depth.txt");
 
                 // 4. trade
                 var trade = AnaylyzeApi.trade(k + "usdt");
                 logger.Error(JsonConvert.SerializeObject(trade));
-                FileUtils.write(JsonConvert.SerializeObject(trade), dt + "-trade.txt");
+                FileUtils.write(JsonConvert.SerializeObject(trade), "d" + dt + "-trade.txt");
 
                 // 5. histroy trade
                 var historytrade = AnaylyzeApi.historytrade(k + "usdt");
                 logger.Error(JsonConvert.SerializeObject(historytrade));
-                FileUtils.write(JsonConvert.SerializeObject(historytrade), dt + "-historytrade.txt");
+                FileUtils.write(JsonConvert.SerializeObject(historytrade), "e" + dt + "-historytrade.txt");
 
                 // 6. detail
                 var detail = AnaylyzeApi.detail(k + "usdt");
                 logger.Error(JsonConvert.SerializeObject(detail));
-                FileUtils.write(JsonConvert.SerializeObject(detail), dt + "-detail.txt");
+                FileUtils.write(JsonConvert.SerializeObject(detail), "f" + dt + "-detail.txt");
 
 
                 //res = CoinAnalyze.AnalyzeBs(k, out lastlow, out nowOpen);

@@ -71,7 +71,7 @@ namespace AutoTest
     "asks": 卖盘,[price(成交价), amount(成交量)], 按price升序
   }
              */
-        public static ResponseMerged Depth(string symbol, string type)
+        public static ResponseDepth Depth(string symbol, string type)
         {
             var url = $"{baseUrl}/depth";
             url += $"?symbol={symbol}&type={type}";
@@ -80,7 +80,7 @@ namespace AutoTest
             var result = RequestDataSync(url, "GET", null, null, out httpCode);
             //Console.WriteLine(result);
             //Console.WriteLine(httpCode);
-            return JsonConvert.DeserializeObject<ResponseMerged>(result);
+            return JsonConvert.DeserializeObject<ResponseDepth>(result);
         }
 
         /*
@@ -98,24 +98,24 @@ namespace AutoTest
     ]
   }
          */
-        public static ResponseKline trade(string symbol)
+        public static ResponseTrade trade(string symbol)
         {
             var url = $"{baseUrl}/trade";
             url += $"?symbol={symbol}";
 
             int httpCode = 0;
             var result = RequestDataSync(url, "GET", null, null, out httpCode);
-            return JsonConvert.DeserializeObject<ResponseKline>(result);
+            return JsonConvert.DeserializeObject<ResponseTrade>(result);
         }
 
-        public static ResponseKline historytrade(string symbol, int size = 2000)
+        public static ResponseHistoryTrade historytrade(string symbol, int size = 2000)
         {
             var url = $"{baseUrl}/history/trade";
             url += $"?symbol={symbol}&size={size}";
 
             int httpCode = 0;
             var result = RequestDataSync(url, "GET", null, null, out httpCode);
-            return JsonConvert.DeserializeObject<ResponseKline>(result);
+            return JsonConvert.DeserializeObject<ResponseHistoryTrade>(result);
         }
 
         /*
@@ -130,14 +130,14 @@ namespace AutoTest
     "count": 近24小时累积成交数,
     "vol": 近24小时累积成交额, 即 sum(每一笔成交价 * 该笔的成交量)
   }*/
-        public static ResponseKline detail(string symbol)
+        public static ResponseDetail detail(string symbol)
         {
-            var url = $"{baseUrl}/trade";
+            var url = $"{baseUrl}/detail";
             url += $"?symbol={symbol}";
 
             int httpCode = 0;
             var result = RequestDataSync(url, "GET", null, null, out httpCode);
-            return JsonConvert.DeserializeObject<ResponseKline>(result);
+            return JsonConvert.DeserializeObject<ResponseDetail>(result);
         }
 
         private static string RequestDataSync(string url, string method, Dictionary<string, object> param, WebHeaderCollection headers, out int httpCode)
